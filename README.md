@@ -33,7 +33,7 @@ The tool will ensure efficient resource utilization by preventing the common pro
 
 ### Monitoring Infrastructure
 
-Following modern DevOps practices, we're implementing:
+Following modern DevOps practices, I'm planning to implement:
 
 - [Prometheus](https://prometheus.io/) for metrics collection
 - [Grafana](https://grafana.com/) for visualization and dashboards
@@ -56,11 +56,13 @@ New users will receive:
 
 ### Resource Sharing
 
-Since this is a collaborative environment, we're implementing fair-share scheduling to ensure everyone gets compute time while allowing for burst usage when the cluster is idle.
+Since this will be a collaborative environment, I'm planning fair-share scheduling to ensure everyone gets compute time while allowing for burst usage when the cluster is idle.
+
+This will be managed through Slurm's fair-share scheduling policies, which prioritize jobs based on user history and resource usage.
 
 ### Support and Community
 
-Questions, requests, and feedback are handled through:
+Questions, requests, and feedback will be handled through:
 
 - Dedicated Slack channel for cluster users
 - Documentation wiki with examples and troubleshooting
