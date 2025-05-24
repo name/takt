@@ -23,6 +23,58 @@ The planned Takt cluster will consist of:
 
 Additional services will include a VPN server for secure remote access, automated backup systems, and web-based monitoring dashboards.
 
+### Network Diagram
+
+This is currently a high-level overview of the planned network architecture (subject to change as hardware is finalized):
+
+```mermaid
+graph TD
+    Internet[Internet] --> SRX1[SRX 300 Node 0]
+    Internet --> SRX2[SRX 300 Node 1]
+    
+    SRX1 -.->|Chassis Cluster| SRX2
+    SRX2 -.->|Chassis Cluster| SRX1
+    
+    SRX1 --> EX2200[Juniper EX2200-C<br/>12x 1GbE + 2x SFP+ 10GbE]
+    
+    EX2200 --> Login[Login Node]
+    EX2200 --> Compute1[Compute Node 1]
+    EX2200 --> Compute2[Compute Node 2]
+    EX2200 --> Compute3[Compute Node 3]
+    EX2200 --> ComputeN[Compute Node N]
+    EX2200 --> GS724T[NETGEAR GS724T<br/>24-port Expansion]
+    EX2200 --> GS308E[NETGEAR GS308E<br/>8-port Lab/Test]
+    
+    EX2200 -->|10GbE SFP+| Storage[Storage Server<br/>TBD TB]
+    
+    GS724T --> IPMI1[IPMI/Management]
+    GS724T --> Monitor[Monitoring Infrastructure]
+    
+    subgraph "Production Network"
+        Login
+        Compute1
+        Compute2
+        Compute3
+        ComputeN
+        Storage
+    end
+    
+    subgraph "Management Network"
+        IPMI1
+        Monitor
+        GS724T
+    end
+    
+    subgraph "Lab/Development"
+        GS308E
+    end
+    
+    subgraph "High Availability Cluster"
+        SRX1
+        SRX2
+    end
+```
+
 ### Job Scheduling with Slurm
 
 Job scheduling will use [Slurm Workload Manager](https://slurm.schedmd.com/documentation.html) with GRES (Generic RESource) for precise GPU allocation across different hardware.
