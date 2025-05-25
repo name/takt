@@ -1,5 +1,10 @@
 # Rack Configuration
 
+## Current Setup
+
+![Current Rack Configuration](../../docs/images/rack-current.jpg)
+*Tecmojo 16U rack with networking equipment installed*
+
 ## Current Layout (14U Available)
 
 | U Position | Equipment | Status |
