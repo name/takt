@@ -3,6 +3,7 @@
 ## Current Setup
 
 ![Current Rack Configuration](../../docs/images/rack-current.jpg)
+
 *Tecmojo 16U rack with networking equipment installed*
 
 ## Current Layout (14U Available)
@@ -24,7 +25,7 @@
 | **U13** | 1U Cover | Clean appearance |
 | **U14** | 1U Cover | Clean appearance |
 
-**Side Mount:** 6-Way Switched PDU
+**Back Mount U8:** 6-Way Switched PDU
 
 ## Target Configuration
 
