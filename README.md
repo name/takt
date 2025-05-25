@@ -4,6 +4,11 @@ Hello! I'm building the **Takt cluster** - a shared compute infrastructure for f
 
 This article covers how the Takt cluster is being designed, built, and will be operated.
 
+## Documentation
+
+- **[Hardware Overview](hardware/README.md)** - Complete hardware specifications and procurement plans
+- **[Rack Configuration](hardware/rack/README.md)** - Physical rack layout and positioning
+
 ## Status
 
 Planning phase - hardware selection and procurement underway

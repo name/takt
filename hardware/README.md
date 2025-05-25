@@ -6,15 +6,20 @@ Planning phase - hardware selection and procurement underway
 
 ## Hardware Overview
 
-### General Hardware
+### Rack & Power
 
 | Component | Specification | Purpose |
 |-----------|---------------|---------|
-| Tecmojo 16U Open Frame Rack | 16U, 512mm depth | Rack for compute nodes, storage, and networking equipment |
-| 10Gbps Cat6a Cables | 0.3, 0.9, 1.5m | High-speed interconnect between nodes and storage |
-| Rackstuds | Red 2.2mm/0.086" | Rack mounting hardware for securing equipment |
-| 24 Port 1U Patch Panel | 10GbE, Cat6a | Organized cabling for easy management |
-| 6 Way Switched PDU | 230V | Power distribution for rack equipment |
+| Tecmojo 16U Open Frame Rack | 16U, 512mm depth | Physical infrastructure |
+| 6-Way Switched PDU | 230V, side-mounted | Power distribution |
+| Rackstuds | Red 2.2mm/0.086" | Rack mounting hardware |
+
+### Cabling & Connectivity
+
+| Component | Specification | Purpose |
+|-----------|---------------|---------|
+| 24 Port 1U Patch Panel | 10GbE, Cat6a | Cable management |
+| 10Gbps Cat6a Cables | 0.3m, 0.9m, 1.5m | High-speed interconnect |
 
 ### Network Hardware
 
@@ -27,11 +32,23 @@ Planning phase - hardware selection and procurement underway
 
 ### Compute Hardware
 
-| Component | Specification | Purpose |
-|-----------|---------------|---------|
-| [TBD] | Login/head node | SSH gateway and job management |
-| [TBD] | GPU compute nodes | ML training and inference workloads |
-| [TBD] | Storage server | Shared datasets and user storage |
+| Component | Target Spec | Purpose |
+|-----------|-------------|---------|
+| Login/Head Node | Mini-PC/NUC, 8GB+ RAM | SSH gateway, job management |
+
+### Compute Tier
+
+| Component | Target Spec | Purpose |
+|-----------|-------------|---------|
+| GPU Node | TBD | ML training and inference |
+
+### Storage Tier
+
+| Component | Target Spec | Purpose |
+|-----------|-------------|---------|
+| Storage Server | High-capacity drives, 10GbE NIC | Shared datasets and user storage |
+
+## Procurement Pipeline
 
 ### Waiting on Delivery
 
@@ -44,3 +61,23 @@ Planning phase - hardware selection and procurement underway
 | Component | Specification | Priority | Estimated Cost |
 |-----------|---------------|----------|----------------|
 | [Additional planned items] | [Specs] | [Priority] | [Cost] |
+
+## Hardware Standards
+
+### Form Factors
+
+- **Compute nodes**: 1/2U rackmount or compatible chassis
+- **Storage**: 2U for drive density and cooling
+- **Networking**: Standard 1U enterprise equipment
+
+### Connectivity
+
+- **Primary network**: 1GbE for all compute nodes
+- **Storage uplink**: 10GbE via SFP+ for high throughput
+- **Management**: Dedicated network for IPMI/BMC access
+
+### Power Requirements
+
+- **Current draw**: ~?kW estimated for full configuration
+- **Redundancy**: Single PDU sufficient for current scale
+- **Monitoring**: Individual outlet switching capability
