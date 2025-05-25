@@ -24,61 +24,61 @@ The planned Takt cluster will consist of:
 | Login Node | [TBD] | SSH gateway and job management |
 | Compute Nodes | [TBD] GPUs, [TBD] CPU cores | ML training and compute workloads |
 | Storage Server | [TBD] TB capacity | Shared datasets and user storage |
-| Network | 10GbE interconnect | High-speed cluster communication |
+| Network | 2.5GbE/10GbE infrastructure | High-speed cluster communication |
 
 Additional services will include a VPN server for secure remote access, automated backup systems, and web-based monitoring dashboards.
 
-### Network Diagram
+### Network Architecture
 
-This is currently a high-level overview of the planned network architecture (subject to change as hardware is finalized):
+The cluster uses a WiFi bridge architecture to connect the upstairs rack to downstairs internet infrastructure:
 
 ```mermaid
 graph TD
-    Internet[Internet] --> SRX1[SRX 300 Node 0]
-    Internet --> SRX2[SRX 300 Node 1]
+    Internet[Internet 2.5 Gbps] --> Router[GT-AX6000 Router]
     
-    SRX1 -.->|Chassis Cluster| SRX2
-    SRX2 -.->|Chassis Cluster| SRX1
+    Router -->|2.5GbE| U7_Down[U7 Pro XG<br/>Downstairs]
     
-    SRX1 --> EX2200[Juniper EX2200-C<br/>12x 1GbE + 2x SFP+ 10GbE]
+    U7_Down -.->|WiFi 7 Bridge<br/>3+ Gbps potential<br/>2.5 Gbps actual| U7_Up[U7 Pro XG<br/>Upstairs]
     
-    EX2200 --> Login[Login Node]
-    EX2200 --> Compute1[Compute Node 1]
-    EX2200 --> Compute2[Compute Node 2]
-    EX2200 --> Compute3[Compute Node 3]
-    EX2200 --> ComputeN[Compute Node N]
-    EX2200 --> GS724T[NETGEAR GS724T<br/>24-port Expansion]
-    EX2200 --> GS308E[NETGEAR GS308E<br/>8-port Lab/Test]
+    U7_Up -->|2.5GbE| SwitchMax[Switch Pro Max 24<br/>8x 2.5GbE + 16x 1GbE + 2x 10G SFP+]
     
-    EX2200 -->|10GbE SFP+| Storage[Storage Server<br/>TBD TB]
-    
-    GS724T --> IPMI1[IPMI/Management]
-    GS724T --> Monitor[Monitoring Infrastructure]
-    
-    subgraph "Production Network"
-        Login
-        Compute1
-        Compute2
-        Compute3
-        ComputeN
-        Storage
+    subgraph Rack ["Server Rack - Local High-Speed Network"]
+        SwitchMax -->|1GbE| Login[Login Node]
+        SwitchMax -->|2.5GbE| Compute1[GPU Node 1]
+        SwitchMax -->|2.5GbE| Compute2[GPU Node 2]
+        SwitchMax -->|2.5GbE| Compute3[GPU Node 3]
+        SwitchMax -->|10GbE SFP+| Storage[Storage Server]
+        SwitchMax -->|1GbE| Management[Management]
     end
     
-    subgraph "Management Network"
-        IPMI1
-        Monitor
-        GS724T
+    subgraph External ["External Traffic via WiFi Bridge"]
+        ExtTraffic[Dataset Downloads<br/>Remote SSH<br/>Package Updates<br/>Monitoring Access]
     end
     
-    subgraph "Lab/Development"
-        GS308E
+    subgraph Local ["Local Rack Traffic - Full Speed"]
+        LocalTraffic[Compute ↔ Storage<br/>Inter-node Communication<br/>Distributed Training<br/>Job Scheduling]
     end
     
-    subgraph "High Availability Cluster"
-        SRX1
-        SRX2
-    end
+    %% Traffic flow indicators
+    U7_Up -.->|2.5 Gbps| External
+    SwitchMax ==>|Full Switch Speed| Local
+    
+    %% Styling
+    classDef internet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef wifi fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef rack fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef traffic fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class Internet,Router internet
+    class U7_Down,U7_Up wifi
+    class SwitchMax,Login,Compute1,Compute2,Compute3,Storage,Management rack
+    class External,Local,ExtTraffic,LocalTraffic traffic
 ```
+
+**Traffic Separation:**
+
+- **External traffic** (internet, remote access): 2.5 Gbps via WiFi bridge
+- **Local traffic** (distributed training, storage access): Full switch fabric speeds
 
 ### Job Scheduling with Slurm
 
