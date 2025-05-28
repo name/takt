@@ -36,9 +36,13 @@ Planning phase - hardware selection and procurement underway
 
 | Component | Specification | Purpose |
 |-----------|---------------|---------|
-| Switch Pro Max 24 | 8x 2.5GbE + 16x 1GbE + 2x 10G SFP+ | Main cluster switch |
-| U7 Pro XG (x2) | WiFi 7, 10GbE uplink | WiFi bridge infrastructure |
-| UniFi 10G PoE++ Adapter (x2) | 60W power delivery | Power for U7 Pro XG units |
+| UniFi Dream Router 7 (UDR7-UK) | 1x 2.5GbE WAN, 3x 2.5GbE LAN, 1x 10G SFP+, WiFi 7 | Gateway/router |
+| UniFi 10G PoE++ Injector (UACC-PoE++-10G-EU) | 60W, 10GbE | Power and data for access points |
+| UniFi Switch Aggregation (USW-Aggregation-UK) | 8x 10G SFP+ | Core aggregation switch |
+| UniFi Switch Pro Max 24 (USW-Pro-Max-24-EU) | 16x 1GbE, 8x 2.5GbE, 2x 10G SFP+ | Main access switch |
+| UniFi Access Point U7 Pro XG (x2) | WiFi 7, 10GbE uplink | Wireless bridge infrastructure |
+| UniFi SFP+ to RJ45 Module (UACC-CM-RJ45-MG) | 10G copper transceiver | Media conversion |
+| UniFi SFP+ DAC Cable (UACC-DAC-SFP10-0.5M) | 0.5m direct attach | Switch interconnect |
 
 ## Compute Hardware
 
@@ -60,17 +64,49 @@ Planning phase - hardware selection and procurement underway
 |-----------|-------------|---------|
 | Storage Server | High-capacity drives, 10GbE NIC | Shared datasets and user storage |
 
+## Network Topology
+
+### Architecture Overview
+
+```plaintext
+                            Internet (1.8 Gbps)
+                                   ↓
+                            UniFi Dream Router 7
+                                   ↓
+                          UniFi 10G PoE++ Switch
+                                   ↓
+                            UniFi Access Point U7 Pro XG (x2)
+                                   ↓
+                            UniFi Switch Aggregation
+                                   ↓ (20G LAG)
+                            UniFi Switch Pro Max 24
+                                   ↓
+                            Compute Nodes / Storage Server
+```
+
+### Performance Characteristics
+
+- **Internet throughput**: 1.8 Gbps WAN, 2.5 Gbps LAN distribution
+- **Intra-segment LAN**: Full 10G within switch domains
+- **Cross-segment LAN**: ~2-3 Gbps via wireless bridge
+- **Core backbone**: 20G aggregate between core switches
+
 ## Procurement Pipeline
 
 ### Currently Ordered
 
-| Component | Specification | Estimated Cost | Status |
+| Component | Estimated Cost | Status |
 |-----------|---------------|----------------|--------|
-| Switch Pro Max 24 | 8x 2.5GbE + 16x 1GbE + 2x 10G SFP+ | £345.00 | Ordered |
-| U7 Pro XG (x2) | WiFi 7 access points | £318.00 | Ordered |
-| UniFi 10G PoE++ Adapter (x2) | 60W power delivery | £62.00 | Ordered |
-| VAT | 20% | £145.60 | - |
-| **Total** | - | **£870.60** | - |
+| UniFi Dream Router 7 (UDR7-UK) | £220 | Ordered |
+| UniFi 10G PoE++ Adapter (60W) (UACC-PoE++-10G-EU) | £62 | Ordered |
+| UniFi Switch Aggregation (USW-Aggregation-UK) | £215 | Ordered |
+| UniFi Switch Pro Max 24 (USW-Pro-Max-24-EU) | £345.00 | Ordered |
+| UniFi Access Point U7 Pro XG (x2) | £318.00 | Ordered |
+| UniFi SFP+ to RJ45 Module (UACC-CM-RJ45-MG) | £50 | Ordered |
+| UniFi SFP+ DAC Cable (UACC-DAC-SFP10-0.5M) (x2) | £20 | Ordered |
+| VAT | 20% | £248.00 | - |
+| Shipping | £10.00 | - |
+| **Total** | **£1,488.00+** | - |
 
 ## Hardware Standards
 
@@ -82,10 +118,10 @@ Planning phase - hardware selection and procurement underway
 
 ### Connectivity
 
-- **Primary network**: 2.5GbE for GPU nodes, 1GbE for other equipment
+- **Primary network**: 10GbE backbone with 10GbE/2.5GbE access
 - **Storage uplink**: 10GbE via SFP+ for high throughput
 - **Management**: Dedicated network for IPMI/BMC access
-- **Internet connectivity**: 2.5GbE via WiFi bridge
+- **Internet connectivity**: 2.5GbE distribution via wireless bridge
 
 ### Power Requirements
 

@@ -24,61 +24,9 @@ The planned Takt cluster will consist of:
 | Login Node | [TBD] | SSH gateway and job management |
 | Compute Nodes | [TBD] GPUs, [TBD] CPU cores | ML training and compute workloads |
 | Storage Server | [TBD] TB capacity | Shared datasets and user storage |
-| Network | 2.5GbE/10GbE infrastructure | High-speed cluster communication |
+| Network | 10GbE infrastructure | High-speed cluster communication |
 
 Additional services will include a VPN server for secure remote access, automated backup systems, and web-based monitoring dashboards.
-
-### Network Architecture
-
-The cluster uses a WiFi bridge architecture to connect the upstairs rack to downstairs internet infrastructure:
-
-```mermaid
-graph TD
-    Internet[Internet 2.5 Gbps] --> Router[GT-AX6000 Router]
-    
-    Router -->|2.5GbE| U7_Down[U7 Pro XG<br/>Downstairs]
-    
-    U7_Down -.->|WiFi 7 Bridge<br/>3+ Gbps potential<br/>2.5 Gbps actual| U7_Up[U7 Pro XG<br/>Upstairs]
-    
-    U7_Up -->|2.5GbE| SwitchMax[Switch Pro Max 24<br/>8x 2.5GbE + 16x 1GbE + 2x 10G SFP+]
-    
-    subgraph Rack ["Server Rack - Local High-Speed Network"]
-        SwitchMax -->|1GbE| Login[Login Node]
-        SwitchMax -->|2.5GbE| Compute1[GPU Node 1]
-        SwitchMax -->|2.5GbE| Compute2[GPU Node 2]
-        SwitchMax -->|2.5GbE| Compute3[GPU Node 3]
-        SwitchMax -->|10GbE SFP+| Storage[Storage Server]
-        SwitchMax -->|1GbE| Management[Management]
-    end
-    
-    subgraph External ["External Traffic via WiFi Bridge"]
-        ExtTraffic[Dataset Downloads<br/>Remote SSH<br/>Package Updates<br/>Monitoring Access]
-    end
-    
-    subgraph Local ["Local Rack Traffic - Full Speed"]
-        LocalTraffic[Compute ↔ Storage<br/>Inter-node Communication<br/>Distributed Training<br/>Job Scheduling]
-    end
-    
-    %% Traffic flow indicators
-    U7_Up -.->|2.5 Gbps| External
-    SwitchMax ==>|Full Switch Speed| Local
-    
-    %% Styling
-    classDef internet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef wifi fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef rack fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef traffic fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    
-    class Internet,Router internet
-    class U7_Down,U7_Up wifi
-    class SwitchMax,Login,Compute1,Compute2,Compute3,Storage,Management rack
-    class External,Local,ExtTraffic,LocalTraffic traffic
-```
-
-**Traffic Separation:**
-
-- **External traffic** (internet, remote access): 2.5 Gbps via WiFi bridge
-- **Local traffic** (distributed training, storage access): Full switch fabric speeds
 
 ### Job Scheduling with Slurm
 
@@ -129,6 +77,7 @@ Questions, requests, and feedback will be handled through:
 
 ### Phase 1: Foundation (2025)
 
+- High-speed network setup
 - Core compute nodes and storage
 - Basic job scheduling and monitoring
 - User onboarding and documentation
